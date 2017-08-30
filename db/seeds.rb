@@ -1,5 +1,12 @@
  require 'random_data'
 
+ 1.times do
+    Post.find_or_create_by!(
+        title: "This is a one of a kind title",
+        body: "this is a one of a kind body"
+        )
+ end
+
  50.times do
    Post.create!(
      title:  RandomData.random_sentence,
