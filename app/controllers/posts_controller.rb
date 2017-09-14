@@ -1,8 +1,9 @@
 class PostsController < ApplicationController
   
   before_action :require_sign_in, except: :show
-  before_action :authorize_user, except: [:show, :new, :create]
-
+  before_action :authorize_user, except: [:show, :new, :create, :destroy, :edit, :update]
+  before_action :mod_user, except: [:show, :new, :create]
+  
   def show
     @post = Post.find(params[:id])
   end
@@ -44,7 +45,7 @@ class PostsController < ApplicationController
     end
   end
   
-    def destroy
+  def destroy
       @post = Post.find(params[:id])
  
       if @post.destroy
@@ -54,13 +55,21 @@ class PostsController < ApplicationController
         flash.now[:alert] = "There was an error deleting the post."
         render :show
       end
-    end
+  end
    
    private
  
    def post_params
      params.require(:post).permit(:title, :body)
    end
+   
+  def mod_user
+      post = Post.find(params[:id])
+      unless current_user == post.user || current_user.admin? || current_user.mod?
+        flash[:alert] = "You must be an admin to do that."
+        redirect_to [post.topic, post]
+      end
+  end
    
    def authorize_user
       post = Post.find(params[:id])
