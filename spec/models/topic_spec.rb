@@ -5,7 +5,7 @@ RSpec.describe Topic, type: :model do
     let(:topic) { create(:topic) }
     
     it { is_expected.to have_many(:posts) }
-    it { is_expected.to have_many(:votes) }
+    # it { is_expected.to have_many(:votes) }
 
     describe "attributes" do
      it "has name, description, and description attributes" do
